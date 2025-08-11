@@ -37,9 +37,7 @@ jobs:
       with:
         images: ${{ env.IMAGE_NAME }}
         tags: |
-          type=ref,event=tag
-          type=ref,event=branch
-          type=sha,prefix={{branch}}-
+          type=match,pattern=v(\d+\.\d+\.\d+),group=1
         labels: |
           org.opencontainers.image.title=Gardiyan
           org.opencontainers.image.description=S3-compatible proxy web server
