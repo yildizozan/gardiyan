@@ -303,11 +303,6 @@ func validateEnvironmentVariables() {
 		missingVars = append(missingVars, "REGION")
 	}
 	
-	// Check path style configuration (must be explicitly set)
-	if getEnvOrDefault("S3_FORCE_PATH_STYLE", "") == "" {
-		missingVars = append(missingVars, "S3_FORCE_PATH_STYLE")
-	}
-	
 	// If any required variables are missing, exit with error
 	if len(missingVars) > 0 {
 		log.Printf("🚨 CRITICAL: Missing required environment variables!")

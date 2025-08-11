@@ -31,6 +31,17 @@ go mod download
 
 Aşağıdaki environment variable'ları ayarlayın:
 
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `ACCESS_KEY_ID` | ✅ | - | S3-compatible storage access key |
+| `SECRET_ACCESS_KEY` | ✅ | - | S3-compatible storage secret key |
+| `S3_BUCKET_NAME` | ✅ | - | Target bucket name |
+| `S3_ENDPOINT` | ✅ | - | S3-compatible endpoint URL |
+| `REGION` | ✅ | - | Storage region |
+| `S3_DISABLE_SSL` | ❌ | `false` | Disable SSL/TLS (use HTTP instead of HTTPS) |
+| `S3_FORCE_PATH_STYLE` | ❌ | `false` | Use path-style URLs instead of virtual-hosted-style |
+| `PORT` | ❌ | `8080` | Server listen port |
+
 #### S3-Compatible Storage Configuration
 - `S3_ENDPOINT`: S3-compatible server endpoint (örn: http://localhost:9000, obs.tr-west-1.myhuaweicloud.com)
 - `S3_DISABLE_SSL`: SSL'i devre dışı bırak (true/false, varsayılan: false)
