@@ -1,0 +1,22 @@
+# Binaries
+gardiyan
+
+# Environment files
+.env
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Test coverage
+coverage.out
+
+# Vendor directory
+vendor/
