@@ -66,8 +66,33 @@ cp .env.example .env
 
 ### Server'ı Başlatma
 
+#### Local Development
 ```bash
 go run main.go
+```
+
+#### With Docker
+```bash
+# Pull from Docker Hub
+docker pull yildizozan/gardiyan:latest
+
+# Run with environment file
+docker run --env-file .env -p 8080:8080 yildizozan/gardiyan:latest
+
+# Or with environment variables
+docker run -e ACCESS_KEY_ID=your-key \
+           -e SECRET_ACCESS_KEY=your-secret \
+           -e S3_BUCKET_NAME=your-bucket \
+           -e S3_ENDPOINT=your-endpoint \
+           -e REGION=your-region \
+           -p 8080:8080 \
+           yildizozan/gardiyan:latest
+```
+
+#### Build Locally
+```bash
+docker build -t gardiyan .
+docker run --env-file .env -p 8080:8080 gardiyan
 ```
 
 ## API Endpoints
@@ -140,6 +165,30 @@ REGION=tr-west-1
 - Storage bucket izinlerini kontrol edin
 - Production ortamında HTTPS kullanın
 - Rate limiting ve authentication ekleyebilirsiniz
+
+## CI/CD - Docker Hub
+
+Bu proje GitHub Actions ile otomatik olarak Docker Hub'a build edilir. Tag push'larında otomatik build tetiklenir.
+
+### Required GitHub Secrets
+Repository Settings > Secrets and variables > Actions'da aşağıdaki secret'ları tanımlayın:
+
+- `DOCKER_USERNAME`: Docker Hub kullanıcı adınız
+- `DOCKER_PASSWORD`: Docker Hub access token'ınız
+
+### Tag ve Release
+```bash
+# Yeni versiyon tag'i oluştur
+git tag v1.1.1
+git push origin v1.1.1
+
+# Docker image otomatik olarak yildizozan/gardiyan:1.1.1 olarak build edilir
+```
+
+### Docker Images
+- **Latest**: `yildizozan/gardiyan:latest`
+- **Versioned**: `yildizozan/gardiyan:1.1.1`
+- **Multi-arch**: AMD64 ve ARM64 desteği
 
 ## Lisans
 
