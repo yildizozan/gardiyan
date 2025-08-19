@@ -24,4 +24,4 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Push the Docker image
-      run: docker push -a yildizozan/gardiyan:$(date +%s)
+      run: docker push yildizozan/gardiyan:$(date +%s)
