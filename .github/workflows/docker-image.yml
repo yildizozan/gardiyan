@@ -16,3 +16,12 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag yildizozan/gardiyan:$(date +%s)
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Push the Docker image
+      run: docker push . --file Dockerfile --tag yildizozan/gardiyan:$(date +%s)
