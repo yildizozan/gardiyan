@@ -17,7 +17,7 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag yildizozan/gardiyan:$(date +%s)
 
-  build:
+  push:
 
     runs-on: ubuntu-latest
 
