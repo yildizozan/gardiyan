@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build_and_push:
+  build:
 
     runs-on: ubuntu-latest
 
@@ -17,7 +17,7 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag yildizozan/gardiyan:latest
 
-    steps:
-    - uses: actions/checkout@v4
+    
     - name: Push the Docker image
-      run: docker push yildizozan/gardiyan:latest
+      run:
+        docker push yildizozan/gardiyan:latest
