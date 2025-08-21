@@ -20,6 +20,6 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag furgandogan/gardiyan:latest
+      run: docker build . --file Dockerfile --tag furkan748/gardiyan:latest
     - name: Push the Docker image
-      run: docker push furgandogan/gardiyan:latest
+      run: docker push furkan748/gardiyan:latest
