@@ -1,0 +1,128 @@
+# Production values for Gardiyan Helm Chart
+# This is an example of how to configure Gardiyan for production use
+
+replicaCount: 3
+
+image:
+  repository: yildizozan/gardiyan
+  pullPolicy: IfNotPresent
+  tag: "0.1.3"
+
+# Environment variables
+env:
+  - name: S3_ENDPOINT
+    value: "obs.tr-west-1.myhuaweicloud.com"
+  - name: S3_BUCKET_NAME
+    value: "my-production-bucket"
+  - name: REGION
+    value: "tr-west-1"
+  - name: S3_FORCE_PATH_STYLE
+    value: "false"
+  - name: S3_DISABLE_SSL
+    value: "false"
+  - name: PORT
+    value: "8080"
+  # S3 credentials from secrets
+  - name: ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: gardiyan-secrets
+        key: access-key-id
+  - name: SECRET_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: gardiyan-secrets
+        key: secret-access-key
+
+# Secrets (these values should be set securely, not in git)
+# Use: helm install gardiyan ./helm/gardiyan --set secrets.access-key-id=YOUR_KEY
+secrets: {}
+# access-key-id: "your-access-key-here"
+# secret-access-key: "your-secret-key-here"
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 250m
+    memory: 128Mi
+
+# Enable autoscaling
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+# Enable ingress for external access
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: gardiyan.yourdomain.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: gardiyan-tls
+      hosts:
+        - gardiyan.yourdomain.com
+
+# Enhanced health checks
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+  
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+# Pod security
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+# Node selection for production
+nodeSelector:
+  kubernetes.io/os: linux
+
+# Tolerations for dedicated nodes
+tolerations: []
+
+# Affinity rules
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - gardiyan
+        topologyKey: kubernetes.io/hostname
