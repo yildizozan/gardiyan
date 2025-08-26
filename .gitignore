@@ -31,8 +31,5 @@ go.work.sum
 .idea/
 .vscode/
 
-# Binaries
-gardiyan
-
 # Logs
 *.log
