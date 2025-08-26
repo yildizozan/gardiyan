@@ -23,3 +23,17 @@ jobs:
       run: docker build . --file Dockerfile --tag furkan748/gardiyan:latest
     - name: Push the Docker image
       run: docker push furkan748/gardiyan:latest
+      
+    - name: Helm Kurulumu
+      uses: azure/setup-helm@v4
+      with:
+        version: 'latest'
+
+    - name: Helm Chart'ı Paketle
+      run: helm package ./helm/gardiyan | ls
+        
+    - name: Login to Docker Hub 
+      run: helm registry login docker.io -u "${{ secrets.DOCKERHUB_USERNAME }}"
+
+    - name: Helm Chart'ı Docker Hub'a Push'la
+      run: helm push gardiyan-*.tgz oci://docker.io/${{ secrets.DOCKERHUB_USERNAME }}  
