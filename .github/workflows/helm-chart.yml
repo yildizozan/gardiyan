@@ -16,8 +16,11 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Docker Hub'a Giriş Yap
-        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | helm registry login docker.io -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Login to Docker Hub
+        with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: helm registry login docker.io -u "${{ secrets.DOCKERHUB_USERNAME }}"
 
       - name: Helm Chart'ı Paketle
         run: helm package ./helm/gardiyan | ls
