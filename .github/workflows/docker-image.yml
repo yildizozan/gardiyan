@@ -7,12 +7,41 @@ on:
     branches: [ "master" ]
 
 jobs:
-
-  build:
+  
+  build_and_push:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag yildizozan/gardiyan:$(date +%s)
+    - name: download codes
+      uses: actions/checkout@v4
+      
+    - name: login to docker hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        
+    - name: build the docker image
+      run: docker build . --file Dockerfile --tag yildizozan/gardiyan:latest
+      
+    - name: push the docker image
+      run: docker push yildizozan/gardiyan:latest
+      
+    - name: install helm
+      uses: azure/setup-helm@v4
+      with:
+        version: 'latest'
+
+    - name: package the helm chart
+      run: helm package ./helm/gardiyan | ls
+        
+    - name: login to docker hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: helm registry login docker.io -u "${{ secrets.DOCKERHUB_USERNAME }}"
+
+    - name: push helm chart to docker hub
+      run: helm push gardiyan-*.tgz oci://docker.io/${{ secrets.DOCKERHUB_USERNAME }}  
